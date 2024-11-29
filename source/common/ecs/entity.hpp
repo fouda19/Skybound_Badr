@@ -40,7 +40,9 @@ namespace our {
 
             components.push_back(component);
 
-            return nullptr;
+            return component;
+
+
         }
 
         // This template method searhes for a component of type T and returns a pointer to it
