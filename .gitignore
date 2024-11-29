@@ -30,9 +30,6 @@ imgui.ini
 
 # More
 docs/
-expected/
-scripts/
 instructions.md
 instructions.pdf
-screenshots/
 errors/
