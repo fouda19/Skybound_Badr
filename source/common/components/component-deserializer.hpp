@@ -5,6 +5,7 @@
 #include "mesh-renderer.hpp"
 #include "free-camera-controller.hpp"
 #include "movement.hpp"
+#include "enemy.hpp"
 
 namespace our {
 
@@ -23,6 +24,9 @@ namespace our {
         }
         else if (type == MeshRendererComponent::getID()) {
             component = entity->addComponent<MeshRendererComponent>();
+        }
+        else if (type == EnemyComponent::getID()) {
+            component = entity->addComponent<EnemyComponent>();
         }
         if(component) component->deserialize(data);
     }
