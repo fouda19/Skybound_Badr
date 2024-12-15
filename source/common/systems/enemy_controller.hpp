@@ -32,11 +32,13 @@ namespace our
                     {
                         enemy->isMovingLeft = true;
                         enemy->isMovingRight = false;
+                        entity->localTransform.rotation.y = -90;
                     }
                     else if(entity->localTransform.position.x - enemy->position.x < -5 ) 
                     {
                         enemy->isMovingRight = true;
                         enemy->isMovingLeft = false;
+                        entity->localTransform.rotation.y = 90;
                     }
                     if(enemy->isMovingRight)
                     {
