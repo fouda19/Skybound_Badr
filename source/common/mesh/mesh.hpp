@@ -32,7 +32,7 @@ namespace our
         {
             // TODO: (Req 2) Write this function
             //  remember to store the number of elements in "elementCount" since you will need it for drawing
-            elementCount = elements.size(); 
+            elementCount = static_cast<GLsizei>(elements.size()); 
             //  For the attribute locations, use the constants defined above: ATTRIB_LOC_POSITION, ATTRIB_LOC_COLOR, etc
 
     
