@@ -1,0 +1,8 @@
+newmtl dogecoin
+Ka 1.000 1.000 1.000     # Ambient color
+Kd 1.000 1.000 1.000     # Diffuse color
+Ks 0.000 0.000 0.000     # Specular color
+Ns 10.000                # Shininess
+d 1.0                    # Opacity
+illum 2                  # Lighting model (Diffuse and Specular)
+map_Kd 300coin.png       # Diffuse texture file
