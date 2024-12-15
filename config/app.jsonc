@@ -31,7 +31,8 @@
                 "wood": "assets/textures/wood.jpg",
                 "glass": "assets/textures/glass-panels.png",
                 "monkey": "assets/textures/monkey.png",
-                "jake": "assets/textures/avatar_slick.png"
+                "jake": "assets/textures/avatar_slick.png",
+                "monster" : "assets/textures/Monster.png"
 
              
             },
@@ -40,7 +41,8 @@
                 "monkey": "assets/models/monkey.obj",
                 "plane": "assets/models/plane.obj",
                 "sphere": "assets/models/sphere.obj",
-                "jake": "assets/models/jake.obj"
+                "jake": "assets/models/jake.obj",
+                "monster" : "assets/models/Monster.obj"
 
             },
             "samplers":{
@@ -135,7 +137,27 @@
                     "texture": "monkey",
                     "sampler": "default"
                 },
-         
+                "monster" : {
+                    "type":"textured",
+                    "shader": "textured",
+                    "pipelineState": {
+                      "faceCulling": {
+                        "enabled": false
+                      },
+                      "depthTesting": {
+                        "enabled": true
+                      }
+                    },
+                    "tint": [
+                      1,
+                      1,
+                      1,
+                      1
+                    ],
+                    "texture": "monster",
+                    "sampler": "default"
+                    
+                },
                 "moon":{
                     "type": "textured",
                     "shader": "textured",
@@ -190,18 +212,18 @@
 
 
             {
-                "rotation": [0, 180, 0],
-                "position":[7,0,3],
-                "scale": [0.5, 0.5, 0.5] , // Scale down by 50%
+                "rotation": [0, 0, 0],
+                "position":[7,0,0],
+                "scale": [1,1,1] , // Scale down by 50%
                 "components": [
                     {
                         "type": "Mesh Renderer",
-                        "mesh": "jake",
-                        "material": "jake"
+                        "mesh": "monster",
+                        "material": "monster"
                     },
                     {
                         "type": "Movement",
-                        "linearVelocity": [0, 0.1, 0],
+                        "linearVelocity": [0, 0, 0],
                         "angularVelocity": [0, 0, 0]
                     }
                 ]
