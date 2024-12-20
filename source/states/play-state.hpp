@@ -54,6 +54,7 @@ class Playstate: public our::State {
         if (world.getdied())
         {
             getApp()->changeState("menu");
+            world.setdied(false);
         }
         if (world.getwon())
         {

@@ -16,9 +16,9 @@ namespace our {
          bool died=false;
          bool won=false;
         glm::vec3 enemyPosition = {0, 0, 0};
-         void setdied()
+         void setdied(bool d=true)
          {
-            died = true;
+            died = d;
         }
 
             void setwon() {
