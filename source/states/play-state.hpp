@@ -51,6 +51,15 @@ class Playstate: public our::State {
             // If the escape  key is pressed in this frame, go to the play state
             getApp()->changeState("menu");
         }
+        if (world.getdied())
+        {
+            getApp()->changeState("menu");
+        }
+        if (world.getwon())
+        {
+            getApp()->changeState("win");
+        }
+        
     }
 
     void onDestroy() override {

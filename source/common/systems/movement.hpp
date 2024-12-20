@@ -7,6 +7,9 @@
 #include <glm/gtc/constants.hpp>
 #include <glm/trigonometric.hpp>
 #include <glm/gtx/fast_trigonometry.hpp>
+#include <iostream>
+#include "../components/enemy.hpp"
+#include "../components/camera.hpp"
 
 namespace our
 {
@@ -23,12 +26,33 @@ namespace our
             for(auto entity : world->getEntities()){
                 // Get the movement component if it exists
                 MovementComponent* movement = entity->getComponent<MovementComponent>();
+                EnemyComponent* enemy = entity->getComponent<EnemyComponent>();
+                CameraComponent* camera = entity->getComponent<CameraComponent>();
                 // If the movement component exists
                 if(movement){
+
                     // Change the position and rotation based on the linear & angular velocity and delta time.
                     entity->localTransform.position += deltaTime * movement->linearVelocity;
                     entity->localTransform.rotation += deltaTime * movement->angularVelocity;
+
                 }
+                if(enemy)
+                {
+                            world->setEnemyPosition(entity->localTransform.position);   
+                }
+                if(camera)
+                {
+                    glm::vec3 eye = entity->localTransform.position;
+                    glm::vec3 enemyPos = world->getEnemyPosition();
+                    float distance = glm::length(eye - enemyPos);
+                    if(distance < 1.9f) { 
+
+                        std::cout << "COLLIDED!" << std::endl;
+                        world->setdied();
+                    }
+               
+                }
+
             }
         }
 
