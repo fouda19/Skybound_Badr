@@ -77,6 +77,8 @@ set(COMMON_SOURCES
         source/common/components/free-camera-controller.cpp
         source/common/components/movement.hpp
         source/common/components/movement.cpp
+        source/common/components/enemy.cpp
+        source/common/components/enemy.hpp
         source/common/components/component-deserializer.hpp
         source/common/components/collisions.hpp
         source/common/components/collisions.cpp
@@ -86,6 +88,7 @@ set(COMMON_SOURCES
         source/common/systems/free-camera-controller.hpp
         source/common/systems/movement.hpp
         source/common/systems/collisions.hpp
+        source/common/systems/enemy_controller.hpp
 )
 
 # Define the directories in which to search for the included headers
