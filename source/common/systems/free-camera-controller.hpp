@@ -20,6 +20,15 @@ namespace our
     class FreeCameraControllerSystem {
         Application* app; // The application in which the state runs
         bool mouse_locked = false; // Is the mouse locked
+        bool isColliding = false;
+        bool isCollidingFront = false;
+        bool isCollidingBack = false;
+        bool isCollidingLeft = false;
+        bool isCollidingRight = false;
+        bool isAboveBlock = false;
+        float endpositiony = 0.0f;
+        bool isBelowBlock = false;
+        bool isCollidingCoin = false;
 
     public:
         // When a state enters, it should call this function and give it the pointer to the application
@@ -90,14 +99,23 @@ namespace our
 
             // We change the camera position based on the keys WASD/QE
             // S & W moves the player back and forth
-            if(app->getKeyboard().isPressed(GLFW_KEY_W)) position += front * (deltaTime * current_sensitivity.z);
-            if(app->getKeyboard().isPressed(GLFW_KEY_S)) position -= front * (deltaTime * current_sensitivity.z);
+            if(app->getKeyboard().isPressed(GLFW_KEY_W) && !isCollidingFront) 
+                position += front * (deltaTime * current_sensitivity.z);
+            if(app->getKeyboard().isPressed(GLFW_KEY_S) && !isCollidingBack) 
+                position -= front * (deltaTime * current_sensitivity.z);
             // Q & E moves the player up and down
-            if(app->getKeyboard().isPressed(GLFW_KEY_Q)) position += up * (deltaTime * current_sensitivity.y);
-            if(app->getKeyboard().isPressed(GLFW_KEY_E)) position -= up * (deltaTime * current_sensitivity.y);
+            if(app->getKeyboard().isPressed(GLFW_KEY_Q)) 
+                position += up * (deltaTime * current_sensitivity.y);
+            if(app->getKeyboard().isPressed(GLFW_KEY_E)) 
+                position -= up * (deltaTime * current_sensitivity.y);
             // A & D moves the player left or right 
-            if(app->getKeyboard().isPressed(GLFW_KEY_D)) position += right * (deltaTime * current_sensitivity.x);
-            if(app->getKeyboard().isPressed(GLFW_KEY_A)) position -= right * (deltaTime * current_sensitivity.x);
+            if(app->getKeyboard().isPressed(GLFW_KEY_D) && !isCollidingRight) 
+                position += right * (deltaTime * current_sensitivity.x);
+            if(app->getKeyboard().isPressed(GLFW_KEY_A) && !isCollidingLeft)  
+                position -= right * (deltaTime * current_sensitivity.x);
+
+            
+             
         }
 
         // When the state exits, it should call this function to ensure the mouse is unlocked

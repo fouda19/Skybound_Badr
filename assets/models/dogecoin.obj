@@ -1,7 +1,6 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
 # File Created: 15.12.2013 22:42:35
 
-mtllib dogecoin.mtl
 
 #
 # object dogecoin
@@ -1315,7 +1314,6 @@ vt 0.5800 0.0457 0.0000
 # 365 texture coords
 
 g dogecoin
-usemtl dogecoin
 s 1
 f 1/1/1 2/2/2 3/3/2 4/4/2 
 f 3/3/2 5/5/2 6/6/2 7/7/3 
