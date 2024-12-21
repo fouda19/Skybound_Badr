@@ -19,6 +19,10 @@ namespace our {
         glm::vec3 positionSensitivity = {3.0f, 3.0f, 3.0f}; // The unity per second of camera movement if WASD is pressed
         float speedupFactor = 5.0f; // A multiplier for the positionSensitivity if "Left Shift" is held.
 
+        bool isBadrJumping=false;
+        bool isBadrFalling=false;
+        glm::vec3 position = {0.0f, 0.0f, 0.0f};
+
         // The ID of this component type is "Free Camera Controller"
         static std::string getID() { return "Free Camera Controller"; }
 

@@ -6,6 +6,12 @@
 
 #include "../application.hpp"
 
+#include "../systems/collisions.hpp"
+#include "../components/player.hpp"
+#include "../components/coin.hpp"
+#include "../components/block.hpp"
+
+
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 #include <glm/trigonometric.hpp>
@@ -29,6 +35,8 @@ namespace our
         float endpositiony = 0.0f;
         bool isBelowBlock = false;
         bool isCollidingCoin = false;
+        bool isJumping = false;
+        bool isFalling = false;
 
     public:
         // When a state enters, it should call this function and give it the pointer to the application
@@ -101,23 +109,161 @@ namespace our
             // S & W moves the player back and forth
             if(app->getKeyboard().isPressed(GLFW_KEY_W) && !isCollidingFront) 
                 position += front * (deltaTime * current_sensitivity.z);
-            if(app->getKeyboard().isPressed(GLFW_KEY_S) && !isCollidingBack) 
+            if(app->getKeyboard().isPressed(GLFW_KEY_S)&& !isCollidingBack) 
                 position -= front * (deltaTime * current_sensitivity.z);
-            // Q & E moves the player up and down
-            if(app->getKeyboard().isPressed(GLFW_KEY_Q)) 
-                position += up * (deltaTime * current_sensitivity.y);
-            if(app->getKeyboard().isPressed(GLFW_KEY_E)) 
-                position -= up * (deltaTime * current_sensitivity.y);
-            // A & D moves the player left or right 
+            //Q & E moves the player up and down
+            // if(app->getKeyboard().isPressed(GLFW_KEY_Q) && !isBelowBlock) 
+            //     position += up * (deltaTime * current_sensitivity.y);
+            // if(app->getKeyboard().isPressed(GLFW_KEY_E) && !isAboveBlock) 
+            //     position -= up * (deltaTime * current_sensitivity.y);
+            //A & D moves the player left or right 
             if(app->getKeyboard().isPressed(GLFW_KEY_D) && !isCollidingRight) 
                 position += right * (deltaTime * current_sensitivity.x);
             if(app->getKeyboard().isPressed(GLFW_KEY_A) && !isCollidingLeft)  
                 position -= right * (deltaTime * current_sensitivity.x);
 
             
-             
-        }
+            isJumping = controller->isBadrJumping;
+            isFalling = controller->isBadrFalling;
 
+            CollisionComponent* badr = nullptr;
+            PlayerComponent* player = nullptr;
+            CollisionComponent* colTemp = nullptr;
+            for (auto entity : world->getEntities())
+            {
+                if (entity->getComponent<PlayerComponent>())
+                {
+                    player = entity->getComponent<PlayerComponent>();
+                    badr = entity->getComponent<CollisionComponent>();
+                    break;
+                }
+            }
+            isAboveBlock = false;
+            isBelowBlock = false;
+            isCollidingRight = false;
+            isCollidingLeft = false;
+            isCollidingFront = false;
+            isCollidingBack = false;
+
+            for (auto entity : world->getEntities())
+            {
+                PlayerComponent *player = entity->getComponent<PlayerComponent>();
+                if(player)
+                {
+                    continue;
+                }
+                glm:: vec3 badrPosition = badr->startBoundingBox + position;
+                CollisionComponent *collisionData = entity->getComponent<CollisionComponent>();
+                if(collisionData && badr)
+                { 
+
+                    if(entity->getComponent<BlockComponent>())
+                    {
+                        isColliding = collisionData->isColliding((collisionData->startBoundingBox), (collisionData->endBoundingBox), (badr->startBoundingBox + position), (badr->endBoundingBox + position)); 
+                        if (isColliding)
+                        {
+                            //std::cout<<"Dakhalt is Colliding beta3t el block"<<std::endl;
+                            glm:: vec3 badrPosition = badr->startBoundingBox + position;
+                            glm:: vec3 badrPositionEnd = badr->endBoundingBox + position;
+
+                            isAboveBlock = badrPosition.y+0.02>= collisionData->endBoundingBox.y;
+                            if(!isAboveBlock)
+                            {
+                                isCollidingBack = (badrPositionEnd.z >= collisionData->startBoundingBox.z) &&
+                                (badrPosition.z < collisionData->startBoundingBox.z) &&
+                                (badrPositionEnd.x > collisionData->startBoundingBox.x) &&
+                                (badrPosition.x < collisionData->endBoundingBox.x) &&
+                                (badrPositionEnd.y > collisionData->startBoundingBox.y) &&
+                                (badrPosition.y < collisionData->endBoundingBox.y);
+
+                                isCollidingFront = (badrPosition.z <= collisionData->endBoundingBox.z) &&
+                                (badrPositionEnd.z > collisionData->endBoundingBox.z) &&
+                                (badrPositionEnd.x > collisionData->startBoundingBox.x) &&
+                                (badrPosition.x < collisionData->endBoundingBox.x) &&
+                                (badrPositionEnd.y > collisionData->startBoundingBox.y) &&
+                                (badrPosition.y < collisionData->endBoundingBox.y);
+
+                                isCollidingLeft = (badrPosition.x <= collisionData->endBoundingBox.x) &&
+                                (badrPositionEnd.x > collisionData->endBoundingBox.x) &&
+                                (badrPositionEnd.z > collisionData->startBoundingBox.z) &&
+                                (badrPosition.z < collisionData->endBoundingBox.z) &&
+                                (badrPositionEnd.y > collisionData->startBoundingBox.y) &&
+                                (badrPosition.y < collisionData->endBoundingBox.y);
+
+                                isCollidingRight = (badrPositionEnd.x >= collisionData->startBoundingBox.x) &&
+                                (badrPosition.x < collisionData->startBoundingBox.x) &&
+                                (badrPositionEnd.z > collisionData->startBoundingBox.z) &&
+                                (badrPosition.z < collisionData->endBoundingBox.z) &&
+                                (badrPositionEnd.y > collisionData->startBoundingBox.y) &&
+                                (badrPosition.y < collisionData->endBoundingBox.y);
+
+                                isAboveBlock = (badrPosition.y >= collisionData->endBoundingBox.y) &&
+                                (badrPosition.x >= collisionData->startBoundingBox.x) &&
+                                (badrPosition.x <= collisionData->endBoundingBox.x) &&
+                                (badrPosition.z >= collisionData->startBoundingBox.z) &&
+                                (badrPosition.z <= collisionData->endBoundingBox.z);
+                            }
+
+                            std:: cout<<"isAboveBlock: "<<isAboveBlock<<std::endl;
+                            std:: cout<<"isBelowBlock: "<<isBelowBlock<<std::endl;
+                            std:: cout<<"isCollidingRight: "<<isCollidingRight<<std::endl;
+                            std:: cout<<"isCollidingLeft: "<<isCollidingLeft<<std::endl;
+                            std:: cout<<"isCollidingFront: "<<isCollidingFront<<std::endl;
+                            std:: cout<<"isCollidingBack: "<<isCollidingBack<<std::endl;
+                        }
+                    }
+                    if(entity->getComponent<CoinComponent>())
+                    {
+                        isColliding = collisionData->isColliding((collisionData->startBoundingBox), (collisionData->endBoundingBox), (badr->startBoundingBox + position), (badr->endBoundingBox + position)); 
+                        CoinComponent *coin = entity->getComponent<CoinComponent>();
+                        if(isColliding)
+                        {
+                            std::cout<<"Khabat fel coin ya zemeely"<<std::endl;
+                            entity->deleteComponent(coin);
+                            world->markForRemoval(entity);
+                        }
+                    }
+                }
+            }
+            if (app->getKeyboard().isPressed(GLFW_KEY_SPACE) && !isJumping && !isFalling)
+            {
+                controller->isBadrJumping = true;
+                if (!isFalling)
+                {
+                    controller->position = position;
+                }
+            }
+            if (isFalling)
+            {
+
+                if (position.y >= 0.0f && (!isAboveBlock))
+                {
+                    position -= up * (deltaTime * current_sensitivity.y);
+                }
+                else
+                {
+                    controller->isBadrFalling = false;
+                }
+            }
+            if (isJumping)
+            {
+                if (position.y <= (controller->position).y + 4.0f && (!isBelowBlock))
+                {
+                    position += up * (deltaTime * current_sensitivity.y * 1.5f);
+                }
+                else
+                {
+                    controller->isBadrJumping = false;
+                    controller->isBadrFalling = true;
+                }
+            }
+            if (!isAboveBlock && !isJumping && !isFalling)
+            {
+                controller->isBadrFalling = true;
+            }
+            world->deleteMarkedEntities();
+        }
+    
         // When the state exits, it should call this function to ensure the mouse is unlocked
         void exit(){
             if(mouse_locked) {

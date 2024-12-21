@@ -7,6 +7,10 @@
 #include "movement.hpp"
 #include "collisions.hpp"
 #include "enemy.hpp"
+#include "player.hpp"
+#include "coin.hpp"
+#include "block.hpp"
+
 
 namespace our {
 
@@ -28,8 +32,21 @@ namespace our {
         }
         else if(type == CollisionComponent::getID()){
             component = entity->addComponent<CollisionComponent>();
+        }
         else if (type == EnemyComponent::getID()) {
             component = entity->addComponent<EnemyComponent>();
+        }
+        else if (type == PlayerComponent::getID())
+        {
+            component = entity->addComponent<PlayerComponent>();
+        }
+        else if (type == CoinComponent::getID())
+        {
+            component = entity->addComponent<CoinComponent>();
+        }
+        else if (type == BlockComponent::getID())
+        {
+            component = entity->addComponent<BlockComponent>();
         }
         if(component) component->deserialize(data);
     }

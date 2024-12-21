@@ -82,6 +82,12 @@ set(COMMON_SOURCES
         source/common/components/component-deserializer.hpp
         source/common/components/collisions.hpp
         source/common/components/collisions.cpp
+        source/common/components/player.hpp
+        source/common/components/player.cpp
+        source/common/components/block.hpp
+        source/common/components/block.cpp
+        source/common/components/coin.hpp
+        source/common/components/coin.cpp
 
         source/common/systems/forward-renderer.hpp
         source/common/systems/forward-renderer.cpp
