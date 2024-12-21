@@ -1,6 +1,7 @@
 #include "forward-renderer.hpp"
 #include "../mesh/mesh-utils.hpp"
 #include "../texture/texture-utils.hpp"
+#include <iostream>
 
 namespace our {
 
@@ -127,6 +128,7 @@ namespace our {
         CameraComponent* camera = nullptr;
         opaqueCommands.clear();
         transparentCommands.clear();
+        lightCommands.clear();
         for(auto entity : world->getEntities()){
             // If we hadn't found a camera yet, we look for a camera in this entity
             if(!camera) camera = entity->getComponent<CameraComponent>();
@@ -138,10 +140,18 @@ namespace our {
                 command.center = glm::vec3(command.localToWorld * glm::vec4(0, 0, 0, 1));
                 command.mesh = meshRenderer->mesh;
                 command.material = meshRenderer->material;
+                //I want to see the shader name shader is a pointer to the shader
+
+
+                
                 // if it is transparent, we add it to the transparent commands list
                 if(command.material->transparent){
                     transparentCommands.push_back(command);
-                } else {
+                } 
+                else if(command.material->affectedByLight){
+                    lightCommands.push_back(command);
+                }
+                else {
                 // Otherwise, we add it to the opaque command list
                     opaqueCommands.push_back(command);
                 }
@@ -216,6 +226,41 @@ namespace our {
             command.mesh->draw();
 
         }   
+        int lightCount = world->light_count;
+        Light* lights = world->lights;
+        std::cout << "Light Count: " << lightCount << std::endl;
+        for (auto &command : lightCommands)
+        {
+            std::cout << "DKHALTTTTT" << std::endl;
+            command.material->setup();
+            std::cout << "HENNNAAA" << std::endl;
+            glm::mat4 M = command.localToWorld;
+            glm::mat4 M_IT = glm::transpose(glm::inverse(M));
+            glm::vec3 eye = camera->getOwner()->localTransform.position;
+            glm::vec3 sky_top = glm::vec3(0.5f, 0.5f, 0.5f);
+            glm::vec3 sky_horizon = glm::vec3(0.5f, 0.5f, 0.5f);
+            glm::vec3 sky_bottom = glm::vec3(0.5f, 0.0f, 0.0f);
+            // send the uniforms to the shader
+            command.material->shader->set("M", M);
+            command.material->shader->set("VP", VP);
+            command.material->shader->set("M_IT", M_IT);
+            command.material->shader->set("eye", eye);
+            command.material->shader->set("sky.top", sky_top);
+            command.material->shader->set("sky.horizon", sky_horizon);
+            command.material->shader->set("sky.bottom", sky_bottom);
+            command.material->shader->set("light_count", lightCount);
+            // send light data to shader
+            for (int i = 0; i < lightCount; i++)
+            {
+                command.material->shader->set("lights[" + std::to_string(i) + "].type", lights[i].type);
+                command.material->shader->set("lights[" + std::to_string(i) + "].position", lights[i].position);
+                command.material->shader->set("lights[" + std::to_string(i) + "].color", lights[i].color);
+                command.material->shader->set("lights[" + std::to_string(i) + "].attenuation", lights[i].attenuation);
+                command.material->shader->set("lights[" + std::to_string(i) + "].direction", lights[i].direction);
+                command.material->shader->set("lights[" + std::to_string(i) + "].cone_angles", lights[i].cone_angles);
+            }
+            command.mesh->draw(); // draw the mesh of the object affected by light
+        }
         
         // If there is a sky material, draw the sky
         if(this->skyMaterial){

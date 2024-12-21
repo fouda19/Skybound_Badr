@@ -5,12 +5,22 @@
 
 namespace our {
 
+    struct Light {
+        int type; // The type of the light (DIRECTIONAL or SPOT or POINT)
+        glm::vec3 position; // The position of the light in the world space
+        glm::vec3 direction; // The direction of the light in the world space
+        glm::vec3 color; // The color of the light
+        glm::vec3 attenuation; // The attenuation of the light
+        glm::vec2 cone_angles; // The cone angles of the light
+    };
     // This class holds a set of entities
     class World {
         std::unordered_set<Entity*> entities; // These are the entities held by this world
         std::unordered_set<Entity*> markedForRemoval; // These are the entities that are awaiting to be deleted
                                                       // when deleteMarkedEntities is called
     public:
+        Light lights[16]; // An array of lights that will be used to store the lights in the world
+        int light_count = 0; // The number of lights in the world
 
         World() = default;
 

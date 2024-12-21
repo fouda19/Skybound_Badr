@@ -3,6 +3,7 @@
 #include "../ecs/entity.hpp"
 #include "camera.hpp"
 #include "mesh-renderer.hpp"
+#include "light.hpp"
 #include "free-camera-controller.hpp"
 #include "movement.hpp"
 #include "collisions.hpp"
@@ -11,6 +12,7 @@
 #include "coin.hpp"
 #include "block.hpp"
 
+#include <iostream>
 
 namespace our {
 
@@ -28,13 +30,25 @@ namespace our {
             component = entity->addComponent<MovementComponent>();
         }
         else if (type == MeshRendererComponent::getID()) {
+            std::cout << "mesh Component Added" << std::endl;
+
             component = entity->addComponent<MeshRendererComponent>();
         }
         else if(type == CollisionComponent::getID()){
             component = entity->addComponent<CollisionComponent>();
         }
         else if (type == EnemyComponent::getID()) {
+            std::cout << "enemy Component Added" << std::endl;
+
             component = entity->addComponent<EnemyComponent>();
+
+        }
+        else if(type == LightComponent::getID()){
+            std::cout << "Light Component Added" << std::endl;
+            component = entity->addComponent<LightComponent>();
+            std::cout << "Type: " << type << std::endl;
+            std::cout << "Entity: " << entity << std::endl;
+            std::cout << "Component: " << component << std::endl;
         }
         else if (type == PlayerComponent::getID())
         {
