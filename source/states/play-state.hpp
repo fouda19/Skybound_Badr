@@ -7,6 +7,8 @@
 #include <systems/free-camera-controller.hpp>
 #include <systems/movement.hpp>
 #include <systems/enemy_controller.hpp>
+#include <systems/light_System.hpp>
+#include <iostream>
 #include <asset-loader.hpp>
 
 // This state shows how to use the ECS framework and deserialization.
@@ -17,6 +19,7 @@ class Playstate: public our::State {
     our::FreeCameraControllerSystem cameraController;
     our::MovementSystem movementSystem;
     our::EnemySystem enemySystem;
+    our::LightSystem lightSystem;
 
     void onInitialize() override {
         // First of all, we get the scene configuration from the app config
@@ -33,19 +36,24 @@ class Playstate: public our::State {
         cameraController.enter(getApp());
         // Then we initialize the renderer
         auto size = getApp()->getFrameBufferSize();
+        std::cout << "Initializing renderer with size: " << size.x << " " << size.y << std::endl;
         renderer.initialize(size, config["renderer"]);
+        std::cout << "Renderer initialized" << std::endl;
     }
 
     void onDraw(double deltaTime) override {
         // Here, we just run a bunch of systems to control the world logic
+        std::cout << "Drawing" << std::endl;
         movementSystem.update(&world, (float)deltaTime);
         enemySystem.update(&world, (float)deltaTime);
         cameraController.update(&world, (float)deltaTime);
         // And finally we use the renderer system to draw the scene
         renderer.render(&world);
+        std::cout << "Drawing" << std::endl;
 
         // Get a reference to the keyboard object
         auto& keyboard = getApp()->getKeyboard();
+        lightSystem.update(&world);
 
         if(keyboard.justPressed(GLFW_KEY_ESCAPE)){
             // If the escape  key is pressed in this frame, go to the play state

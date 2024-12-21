@@ -79,6 +79,8 @@ set(COMMON_SOURCES
         source/common/components/movement.cpp
         source/common/components/enemy.cpp
         source/common/components/enemy.hpp
+        source/common/components/light.hpp
+        source/common/components/light.cpp
         source/common/components/component-deserializer.hpp
 
         source/common/systems/forward-renderer.hpp
@@ -86,6 +88,7 @@ set(COMMON_SOURCES
         source/common/systems/free-camera-controller.hpp
         source/common/systems/movement.hpp
         source/common/systems/enemy_controller.hpp
+        source/common/systems/light_system.hpp
 )
 
 # Define the directories in which to search for the included headers

@@ -2,6 +2,7 @@
 
 #include <glad/gl.h>
 #include "vertex.hpp"
+#include <iostream>
 
 namespace our
 {
@@ -76,10 +77,12 @@ namespace our
         void draw()
         {
             // TODO: (Req 2) Write this function
+        std::cout << "Drawing Mesh" << std::endl;
             glBindVertexArray(VAO);
             //draw triangles,count,unsigned,no offset
             glDrawElements(GL_TRIANGLES, elementCount, GL_UNSIGNED_INT, (void *)0);
             glBindVertexArray(0); 
+            std::cout << "Mesh Drawn" << std::endl;
         }
 
         // this function should delete the vertex & element buffers and the vertex array object
